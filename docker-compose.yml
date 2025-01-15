@@ -1,0 +1,77 @@
+
+services:
+  frontend:
+    build:
+      context: ./frontend/chat-app
+    container_name: frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+    # networks:
+    #   - webapp
+  app:
+    build: ./backend/ 
+    volumes:
+      - ./backend:/code/src
+      - ./backend/requirements.txt:/code/requirements.txt
+    command: gunicorn src.app:app --bind 0.0.0.0:8080 --workers 4 --preload
+    env_file:
+      - .env
+    restart: always
+    # depends_on:
+    # # Uncomment to run qdrant locally
+    #   # qdrant:
+    #   #   condition: service_started
+    #   ollama:
+    #     condition: service_healthy 
+    # networks:
+    #   - ollama-docker
+    #   - webapp
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+ 
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./scripts:/scripts
+  #     - ./backend/ollama/ollama:/root/.ollama
+  #   container_name: ollama
+  #   pull_policy: always
+  #   tty: true
+  #   restart: always
+  #   environment:
+  #     - OLLAMA_KEEP_ALIVE=24h
+  #     - OLLAMA_HOST=0.0.0.0
+  #   entrypoint: ["/usr/bin/bash", "/scripts/download_models.sh"] 
+  #   healthcheck:
+  #     test : ["CMD",/usr/bin/bash,"./scripts/healthcheck.sh"] 
+  #     interval: 60s  
+  #     timeout: 5s    
+  #     retries: 10   
+  #     start_period: 100s  
+  #   networks:
+  #     - ollama-docker
+  #   expose:
+  #     - "11434"
+
+  # Uncomment to run qdrant locally
+  # qdrant:
+  #   image: qdrant/qdrant
+  #   ports:
+  #     - "6333:6333"
+  #   expose:
+  #     - "6333"
+  #   networks:
+  #     - ollama-docker
+
+# networks:
+#   webapp:
+#     external: false
+#   ollama-docker:
+#     external: false
+  
