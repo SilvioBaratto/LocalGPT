@@ -146,3 +146,6 @@ prod_graph_index.json
 code/settings/settings.txt
 */*/node_modules
 backend/ollama/*
+
+# do not push folder node_modules inside localgpt_frontend
+localgpt_frontend/node_modules
