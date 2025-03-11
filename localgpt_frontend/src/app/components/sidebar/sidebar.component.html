@@ -1,0 +1,33 @@
+<div
+    class="w-80 flex-shrink-0 bg-white border border-gray-200 rounded-3xl flex flex-col h-full p-6 space-y-6">
+
+    <!-- Logo Section with New Chat Icon -->
+    <div class="flex justify-center items-center space-x-2">
+        <span class="font-bold text-xl">LocalGPT</span>
+        <img src="/assets/icons/new_chat.svg" alt="New Chat" class="w-6 h-6" />
+    </div>
+
+    <!-- Document History -->
+    <div class="flex-1 overflow-auto space-y-3 rounded-3xl" #conversationList>
+        <ul>
+            <li
+                *ngFor="let doc of recentConversations"
+                class="p-3 bg-gray-100 rounded-3xl flex items-center cursor-pointer hover:bg-gray-200 mb-2"
+                (click)="loadDocument(doc)">
+                <img
+                    src="/assets/icons/document.svg"
+                    alt="Document Icon"
+                    class="h-6 w-6 mr-3" />
+                <span class="truncate">{{ doc.name }}</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Clear History Section -->
+    <div
+        class="flex items-center text-gray-600 space-x-2 cursor-pointer hover:text-red-500"
+        (click)="clearHistoryTrigger()">
+        <img src="/assets/icons/trash.svg" alt="Trash Icon" class="w-5 h-5" />
+        <span>Cancella cronologia</span>
+    </div>
+</div>

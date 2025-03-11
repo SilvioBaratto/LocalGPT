@@ -1,0 +1,78 @@
+<div class="flex flex-col bg-[#E8EDF5] rounded-3xl h-full">
+    <!-- Chat Messages (Scrollable Area) -->
+    <div
+        class="flex-grow p-8 space-y-6 overflow-auto max-h-[calc(100vh-150px)]">
+        <div *ngFor="let msg of messages; let i = index" class="flex w-full"
+            [ngClass]="{
+            'justify-start': msg.sender === 'bot',
+            'justify-end': msg.sender === 'user'
+          }">
+            <div
+                class="max-w-xl p-5 rounded-xl shadow-sm text-base leading-relaxed"
+                [ngClass]="{
+              'bg-gray-100 text-gray-700': msg.sender === 'bot',
+              'bg-[#4A51FF] text-white': msg.sender === 'user'
+            }">
+                <!-- User message -->
+                <p *ngIf="msg.sender === 'user'"
+                    class="text-base leading-relaxed">
+                    {{ msg.text }}
+                </p>
+
+                <!-- Bot message -->
+                <div *ngIf="msg.sender === 'bot'">
+                    <div class="text-base leading-relaxed"
+                        [innerHTML]="msg.text | markdown"></div>
+
+                    <!-- References button and source list -->
+                    <div *ngIf="msg.sources" class="mt-2">
+                        <button (click)="toggleSources(msg)"
+                            class="flex items-center text-gray-500 hover:text-gray-700">
+                            <img src="/assets/icons/reference.svg"
+                                alt="References" class="w-4 h-4 mr-2">
+                            References
+                        </button>
+
+                        <!-- Sources container -->
+                        <div *ngIf="msg.showSources"
+                            class="mt-2 p-3 bg-white border border-gray-300 rounded shadow-md max-h-40 overflow-auto w-full">
+                            <div *ngFor="let key of getSourceKeys(msg.sources)"
+                                class="text-sm text-gray-600 break-words">
+                                <p class="truncate font-semibold text-gray-800">
+                                    {{ key }}
+                                </p>
+                                <p class="text-xs text-gray-600 break-all">
+                                    Pages: {{ msg.sources[key].join(', ') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Input (Fixed at Bottom) -->
+    <div class="p-4 bg-white rounded-3xl sticky bottom-0">
+        <div class="flex items-center space-x-2">
+            <!-- Attach button -->
+            <button type="button"
+                class="flex items-center justify-center px-3 py-2 border border-gray-300 rounded-full text-gray-700 hover:bg-gray-100">
+                <img src="/assets/icons/attach.svg" alt="Attach"
+                    class="w-5 h-5">
+            </button>
+
+            <!-- Input field -->
+            <input type="text" [(ngModel)]="userInput"
+                (keyup.enter)="onSendMessage()"
+                placeholder="Message LocalGPT"
+                class="flex-grow px-4 py-2 text-gray-700 placeholder-gray-400 rounded-full outline-none focus:ring-2 focus:ring-[#4A51FF] bg-gray-100">
+
+            <!-- Send button -->
+            <button (click)="onSendMessage()"
+                class="flex items-center justify-center bg-[#4A51FF] text-white p-3 rounded-full hover:bg-[#3b46e0]">
+                <img src="/assets/icons/send.svg" alt="Send" class="w-5 h-5">
+            </button>
+        </div>
+    </div>
+</div>

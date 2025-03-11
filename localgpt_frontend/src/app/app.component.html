@@ -1,1 +1,41 @@
-<app-chat></app-chat>
+<div
+    class="flex h-screen text-sm font-sans text-gray-800 bg-[#E8EDF5] p-6 overflow-hidden">
+    <!-- Fixed Sidebar Column -->
+    <div class="w-80 flex-shrink-0">
+        <app-sidebar
+            [recentConversations]="recentConversations"
+            (newDocument)="onNewDocument()"
+            (documentSelected)="loadDocument($event)"
+            (clearHistory)="onClearHistory()">
+        </app-sidebar>
+    </div>
+
+    <!-- Main Content Column -->
+    <div class="flex-grow ml-4 flex flex-col relative h-full">
+        <!-- Template Name Dropdown Section -->
+        <div class="mb-4">
+            <div class="flex items-center space-x-2 cursor-pointer"
+                (click)="toggleDropdown()">
+                <span class="text-xl font-semibold">{{ selectedModel }}</span>
+                <img src="/assets/icons/arrow_down.svg" alt="Arrow Down"
+                    class="w-4 h-4" />
+            </div>
+
+            <div
+                *ngIf="isDropdownOpen"
+                class="absolute top-10 left-0 w-40 bg-white border border-gray-300 shadow-md rounded-md z-50">
+                <div
+                    *ngFor="let model of models"
+                    (click)="selectModel(model)"
+                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800">
+                    {{ model }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Section (Pinned to Bottom) -->
+        <div class="flex flex-col flex-grow h-full justify-end">
+            <app-chat [modelName]="selectedModel"></app-chat>
+        </div>
+    </div>
+</div>
